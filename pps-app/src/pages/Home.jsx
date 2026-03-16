@@ -8,10 +8,9 @@ export default function Home({ sessionData, setSessionData }) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     patientId: sessionData?.patientId || '',
-    firstName: sessionData?.firstName || '',
-    lastName: sessionData?.lastName || '',
+    fullName: sessionData?.fullName || '',
     dob: sessionData?.dob || '',
-    date: sessionData?.date || new Date().toLocaleDateString('zh-TW', { timeZone: 'Asia/Taipei' })
+    date: sessionData?.date || new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' })
   });
   const [error, setError] = useState('');
 
@@ -31,8 +30,6 @@ export default function Home({ sessionData, setSessionData }) {
     navigate(`/select`);
   };
 
-
-
   return (
     <Container className="py-5">
       <h1 className="text-center mb-4">{t('app_title')}</h1>
@@ -44,28 +41,14 @@ export default function Home({ sessionData, setSessionData }) {
         <Col md={8} lg={6}>
           <Card className="shadow-sm border-0 bg-white">
             <Card.Body className="p-4">
-              <Row>
-                <Col md={6}>
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold fs-6 mb-2 text-primary">{t('first_name')}</Form.Label>
-                    <Form.Control 
-                      type="text" 
-                      value={formData.firstName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-4">
-                    <Form.Label className="fw-bold fs-6 mb-2 text-primary">{t('last_name')}</Form.Label>
-                    <Form.Control 
-                      type="text" 
-                      value={formData.lastName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-bold fs-6 mb-2 text-primary">{t('full_name')}</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  value={formData.fullName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                />
+              </Form.Group>
 
               <Form.Group className="mb-4">
                 <Form.Label className="fw-bold fs-6 mb-2 text-primary">{t('patient_id')} <span className="text-danger">*</span></Form.Label>
@@ -86,8 +69,7 @@ export default function Home({ sessionData, setSessionData }) {
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-bold fs-6 mb-2 text-primary">{t('dob')}</Form.Label>
                     <Form.Control 
-                      type="text" 
-                      placeholder="YYYY/MM/DD"
+                      type="date" 
                       value={formData.dob}
                       onChange={(e) => setFormData(prev => ({ ...prev, dob: e.target.value }))}
                     />
@@ -97,7 +79,7 @@ export default function Home({ sessionData, setSessionData }) {
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-bold fs-6 mb-2 text-primary">{t('date')}</Form.Label>
                     <Form.Control 
-                      type="text" 
+                      type="date" 
                       value={formData.date}
                       onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
                     />

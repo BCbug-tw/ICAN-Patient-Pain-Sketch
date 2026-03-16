@@ -34,7 +34,7 @@ export default function Summary({ sessionData, setSessionData }) {
       lastName: [295, 100],
       mrn: [122, 118],
       dob: [295, 118],
-      date: [122, 136], // Estimated below MRN line if needed, or stick to lines
+      date: [122, 136],
       checkboxes: {
         'PPS_BKA': [378, 37],
         'PPS_AKA': [378, 51],
@@ -42,6 +42,30 @@ export default function Summary({ sessionData, setSessionData }) {
         'PPS_Transhumeral': [378, 96],
         'PPS_Forequarter': [378, 111],
       }
+    };
+
+    // Smart Name Parsing
+    let firstName = '';
+    let lastName = '';
+    const name = sessionData.fullName || '';
+    
+    // Check if name contains Chinese characters
+    const hasChinese = /[\u4e00-\u9fa5]/.test(name);
+    
+    if (hasChinese) {
+      firstName = name; // Entire name to first name slot for Chinese
+    } else if (name.includes(' ')) {
+      const parts = name.trim().split(/\s+/);
+      firstName = parts[0];
+      lastName = parts.slice(1).join(' '); // Remainder to last name
+    } else {
+      firstName = name;
+    }
+
+    // Date Formatting (YYYY-MM-DD to YYYY/MM/DD)
+    const formatDate = (dateStr) => {
+      if (!dateStr) return '';
+      return dateStr.replace(/-/g, '/');
     };
 
     chartEntries.forEach(([chartId, dataUrl], index) => {
@@ -54,13 +78,13 @@ export default function Summary({ sessionData, setSessionData }) {
       pdf.setFontSize(10);
       pdf.setTextColor(0, 0, 0);
       
-      if (sessionData.firstName) pdf.text(sessionData.firstName, coords.firstName[0], coords.firstName[1]);
-      if (sessionData.lastName) pdf.text(sessionData.lastName, coords.lastName[0], coords.lastName[1]);
+      if (firstName) pdf.text(firstName, coords.firstName[0], coords.firstName[1]);
+      if (lastName) pdf.text(lastName, coords.lastName[0], coords.lastName[1]);
       if (sessionData.patientId) pdf.text(sessionData.patientId, coords.mrn[0], coords.mrn[1]);
-      if (sessionData.dob) pdf.text(sessionData.dob, coords.dob[0], coords.dob[1]);
+      if (sessionData.dob) pdf.text(formatDate(sessionData.dob), coords.dob[0], coords.dob[1]);
       
-      // Optional: Draw filling date if it's on a known line. For now, let's put it at a safe spot or skip if not in template.
-      // pdf.text(sessionData.date, 122, 136);
+      // Optional: Draw filling date
+      // pdf.text(formatDate(sessionData.date), 122, 136);
 
       // 3. Auto-calculate and check boxes
       const checkCoords = coords.checkboxes[chartId];

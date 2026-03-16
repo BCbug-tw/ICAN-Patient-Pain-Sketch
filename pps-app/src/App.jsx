@@ -9,10 +9,9 @@ import { useState, useEffect } from 'react';
 function App() {
   const [sessionData, setSessionData] = useState({
     patientId: '', // MRN
-    firstName: '',
-    lastName: '',
+    fullName: '',
     dob: '',
-    date: new Date().toLocaleDateString('zh-TW', { timeZone: 'Asia/Taipei' }), // Default to Taipei today
+    date: new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' }), // YYYY-MM-DD for date input
     selectedCharts: [], // Array of selected chart IDs
     chartImages: {} // Map of chartId -> Data URL
   });
