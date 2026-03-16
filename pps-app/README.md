@@ -59,6 +59,23 @@ npm run dev
 npm run build
 ```
 
+## Deployment
+
+This project is configured for **Automated Deployment** via GitHub Actions.
+
+### Continuous Integration (CI/CD)
+Whenever you push code to the `main` or `master` branch, a GitHub Action will automatically:
+1.  Install dependencies.
+2.  Build the production bundle (`dist`).
+3.  Deploy the bundle to the `gh-pages` branch.
+
+### GitHub Repository Settings
+To enable the auto-deploy:
+1.  **Workflow Permissions**: Go to **Settings > Actions > General**. Under **Workflow permissions**, select **"Read and write permissions"**.
+2.  **Pages Source**: Go to **Settings > Pages**.
+    - Set **Source** to "Deploy from a branch".
+    - Set **Branch** to `gh-pages`.
+
 ## Important Notes
 
 - **Data Persistence**: This system uses temporary state management. Refreshing the browser or clicking "Start Over" will clear all unsaved markings.
