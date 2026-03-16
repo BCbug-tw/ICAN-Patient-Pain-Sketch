@@ -92,7 +92,19 @@ export default function Summary({ sessionData, setSessionData }) {
     });
 
     const pidPrefix = sessionData.patientId ? `${sessionData.patientId}_` : '';
-    pdf.save(`${pidPrefix}Patient_Pain_Sketch.pdf`);
+    const filename = `${pidPrefix}Patient_Pain_Sketch.pdf`;
+
+    // Support for iOS: use Blob instead of pdf.save()
+    const blob = pdf.output('blob');
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
     setHasDownloaded(true);
   };
 

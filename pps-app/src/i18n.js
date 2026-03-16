@@ -78,7 +78,7 @@ const resources = {
       "select_charts_title": "選擇需要標記的圖表",
       "select_charts_subtitle": "您選擇的圖表將會依序出現供您標記(可多選)。",
       "start_sketch": "開始標記",
-      "download_pdf": "下載 PDF 報告",
+      "download_pdf": "下載 PDF",
 
       "back": "返回",
       "back_to_selection": "返回選擇",
@@ -105,7 +105,7 @@ const resources = {
       "summary_instr": "使用說明：您可以在此檢視各圖表標記結果。若需修改，點擊圖表右下的「編輯」即可重回標記頁面。確認無誤後點擊「下載 PDF 報告」儲存檔案。",
       "progress_label": "填答進度",
 
-      "detail_instr": "使用說明：您可以從下方工具列選擇工具。單點(X)：點擊圖表可標記。箭頭：按住拖曳可繪製。橡皮擦：點擊或拖曳標記即可清除。完成後點擊「儲存」或「下一步」。",
+      "detail_instr": "使用說明：您可以從下方工具列選擇工具。單點(X)：點擊圖表可標記。箭頭：按住拖曳可繪製。橡皮擦：點擊或拖曳標記即可清除。",
 
       "restart_warning_title": "警告：尚未存檔",
       "restart_warning_msg": "您尚未下載 PDF 報告。按下重新開始將會清除目前的標記並回到首頁。您確定要繼續嗎？",

@@ -80,7 +80,7 @@ export default function Detail({ sessionData, setSessionData }) {
           <Button 
             variant={mode === 'point' ? "primary" : "outline-secondary"} 
             className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={() => setMode('point')}
+            onClick={(e) => { setMode('point'); e.currentTarget.blur(); }}
             style={{ width: '40px', height: '40px' }}
           >
             <X size={18} strokeWidth={2.5} />
@@ -91,7 +91,7 @@ export default function Detail({ sessionData, setSessionData }) {
           <Button 
             variant={mode === 'arrow' ? "primary" : "outline-secondary"} 
             className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={() => setMode('arrow')}
+            onClick={(e) => { setMode('arrow'); e.currentTarget.blur(); }}
             style={{ width: '40px', height: '40px' }}
           >
             <MoveUpRight size={18} />
@@ -102,7 +102,7 @@ export default function Detail({ sessionData, setSessionData }) {
           <Button 
             variant={mode === 'eraser' ? "primary" : "outline-secondary"} 
             className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={() => setMode('eraser')}
+            onClick={(e) => { setMode('eraser'); e.currentTarget.blur(); }}
             style={{ width: '40px', height: '40px' }}
           >
             <Eraser size={18} />
@@ -115,7 +115,7 @@ export default function Detail({ sessionData, setSessionData }) {
           <Button 
             variant="outline-danger" 
             className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={handleClear}
+            onClick={(e) => { handleClear(); e.currentTarget.blur(); }}
             style={{ width: '40px', height: '40px' }}
           >
             <Trash2 size={18} />
@@ -162,7 +162,7 @@ export default function Detail({ sessionData, setSessionData }) {
               <Button 
                 variant={mode === 'point' ? "primary" : "outline-secondary"} 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                onClick={() => setMode('point')}
+                onClick={(e) => { setMode('point'); e.currentTarget.blur(); }}
                 style={{ width: '40px', height: '40px' }}
               >
                 <X size={18} strokeWidth={2.5} />
@@ -173,7 +173,7 @@ export default function Detail({ sessionData, setSessionData }) {
               <Button 
                 variant={mode === 'arrow' ? "primary" : "outline-secondary"} 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                onClick={() => setMode('arrow')}
+                onClick={(e) => { setMode('arrow'); e.currentTarget.blur(); }}
                 style={{ width: '40px', height: '40px' }}
               >
                 <MoveUpRight size={18} />
@@ -184,7 +184,7 @@ export default function Detail({ sessionData, setSessionData }) {
               <Button 
                 variant={mode === 'eraser' ? "primary" : "outline-secondary"} 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                onClick={() => setMode('eraser')}
+                onClick={(e) => { setMode('eraser'); e.currentTarget.blur(); }}
                 style={{ width: '40px', height: '40px' }}
               >
                 <Eraser size={18} />
@@ -197,7 +197,7 @@ export default function Detail({ sessionData, setSessionData }) {
               <Button 
                 variant="outline-danger" 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                onClick={handleClear}
+                onClick={(e) => { handleClear(); e.currentTarget.blur(); }}
                 style={{ width: '40px', height: '40px' }}
               >
                 <Trash2 size={18} />
