@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pain Map Marking Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="controls">
+        <h1>Patient Pain Sketch</h1>
+        <p>請點擊圖片以標記疼痛部位 (Click to mark pain locations)</p>
+        <div style="margin-bottom: 15px;">
+            <label for="sketch-select">選擇圖表 (Select Chart): </label>
+            <select id="sketch-select" style="padding: 5px; font-size: 16px;">
+                <option value="PPS_Forequarter.pdf">Forequarter</option>
+                <option value="PPS_Transhumeral.pdf">Transhumeral</option>
+                <option value="PPS_Transradial.pdf">Transradial</option>
+                <option value="PPS_Upper limb.pdf">Upper limb</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="margin-right: 15px;">標記模式 (Marker Mode):</label>
+            <label>
+                <input type="radio" name="marker-mode" value="point" checked> X Marker
+            </label>
+            <label style="margin-left: 10px;">
+                <input type="radio" name="marker-mode" value="arrow"> Arrow
+            </label>
+        </div>
+
+        <button id="clear-btn" class="btn secondary">清除所有標記 (Clear All)</button>
+        <button id="save-btn" class="btn primary">下載 PDF (Download PDF)</button>
+    </div>
+
+    <div id="canvas-container">
+        <canvas id="pdf-render"></canvas>
+        <canvas id="marks-layer"></canvas>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
