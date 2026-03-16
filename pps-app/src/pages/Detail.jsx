@@ -76,51 +76,43 @@ export default function Detail({ sessionData, setSessionData }) {
     <>
       {/* Floating Toolbar - Only visible on Mobile (Portrait) */}
       <div className="toolbar-container bg-white shadow-sm border rounded-pill px-3 py-2 d-md-none d-flex align-items-center gap-2" style={{ position: 'fixed', bottom: '100px', left: '50%', transform: 'translateX(-50%)', zIndex: 1040 }}>
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('stage2_marker_x')}</Tooltip>}>
-          <Button 
-            variant={mode === 'point' ? "primary" : "outline-secondary"} 
-            className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={(e) => { setMode('point'); e.currentTarget.blur(); }}
-            style={{ width: '40px', height: '40px' }}
-          >
-            <X size={18} strokeWidth={2.5} />
-          </Button>
-        </OverlayTrigger>
+        <Button 
+          variant={mode === 'point' ? "primary" : "outline-secondary"} 
+          className="rounded-circle p-2 d-flex align-items-center justify-content-center"
+          onClick={(e) => { setMode('point'); e.currentTarget.blur(); }}
+          style={{ width: '40px', height: '40px' }}
+        >
+          <X size={18} strokeWidth={2.5} />
+        </Button>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('stage2_marker_arrow')}</Tooltip>}>
-          <Button 
-            variant={mode === 'arrow' ? "primary" : "outline-secondary"} 
-            className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={(e) => { setMode('arrow'); e.currentTarget.blur(); }}
-            style={{ width: '40px', height: '40px' }}
-          >
-            <MoveUpRight size={18} />
-          </Button>
-        </OverlayTrigger>
+        <Button 
+          variant={mode === 'arrow' ? "primary" : "outline-secondary"} 
+          className="rounded-circle p-2 d-flex align-items-center justify-content-center"
+          onClick={(e) => { setMode('arrow'); e.currentTarget.blur(); }}
+          style={{ width: '40px', height: '40px' }}
+        >
+          <MoveUpRight size={18} />
+        </Button>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('stage2_marker_eraser')}</Tooltip>}>
-          <Button 
-            variant={mode === 'eraser' ? "primary" : "outline-secondary"} 
-            className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={(e) => { setMode('eraser'); e.currentTarget.blur(); }}
-            style={{ width: '40px', height: '40px' }}
-          >
-            <Eraser size={18} />
-          </Button>
-        </OverlayTrigger>
+        <Button 
+          variant={mode === 'eraser' ? "primary" : "outline-secondary"} 
+          className="rounded-circle p-2 d-flex align-items-center justify-content-center"
+          onClick={(e) => { setMode('eraser'); e.currentTarget.blur(); }}
+          style={{ width: '40px', height: '40px' }}
+        >
+          <Eraser size={18} />
+        </Button>
 
         <div className="vr mx-1" style={{ height: '20px' }}></div>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('clear_all')}</Tooltip>}>
-          <Button 
-            variant="outline-danger" 
-            className="rounded-circle p-2 d-flex align-items-center justify-content-center"
-            onClick={(e) => { handleClear(); e.currentTarget.blur(); }}
-            style={{ width: '40px', height: '40px' }}
-          >
-            <Trash2 size={18} />
-          </Button>
-        </OverlayTrigger>
+        <Button 
+          variant="outline-danger" 
+          className="rounded-circle p-2 d-flex align-items-center justify-content-center"
+          onClick={(e) => { handleClear(); e.currentTarget.blur(); }}
+          style={{ width: '40px', height: '40px' }}
+        >
+          <Trash2 size={18} />
+        </Button>
       </div>
 
       <Container className="py-2 pb-5 mb-5">
@@ -158,7 +150,6 @@ export default function Detail({ sessionData, setSessionData }) {
 
           {/* Integrated Toolbar - Hidden on mobile if screen is too narrow */}
           <div style={{ flex: 1 }} className="d-none d-md-flex justify-content-center align-items-center gap-2">
-            <OverlayTrigger placement="top" overlay={<Tooltip>{t('stage2_marker_x')}</Tooltip>}>
               <Button 
                 variant={mode === 'point' ? "primary" : "outline-secondary"} 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
@@ -167,9 +158,7 @@ export default function Detail({ sessionData, setSessionData }) {
               >
                 <X size={18} strokeWidth={2.5} />
               </Button>
-            </OverlayTrigger>
 
-            <OverlayTrigger placement="top" overlay={<Tooltip>{t('stage2_marker_arrow')}</Tooltip>}>
               <Button 
                 variant={mode === 'arrow' ? "primary" : "outline-secondary"} 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
@@ -178,9 +167,7 @@ export default function Detail({ sessionData, setSessionData }) {
               >
                 <MoveUpRight size={18} />
               </Button>
-            </OverlayTrigger>
 
-            <OverlayTrigger placement="top" overlay={<Tooltip>{t('stage2_marker_eraser')}</Tooltip>}>
               <Button 
                 variant={mode === 'eraser' ? "primary" : "outline-secondary"} 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
@@ -189,11 +176,9 @@ export default function Detail({ sessionData, setSessionData }) {
               >
                 <Eraser size={18} />
               </Button>
-            </OverlayTrigger>
 
             <div className="vr mx-2" style={{ height: '24px' }}></div>
 
-            <OverlayTrigger placement="top" overlay={<Tooltip>{t('clear_all')}</Tooltip>}>
               <Button 
                 variant="outline-danger" 
                 className="rounded-circle p-2 d-flex align-items-center justify-content-center"
@@ -202,7 +187,6 @@ export default function Detail({ sessionData, setSessionData }) {
               >
                 <Trash2 size={18} />
               </Button>
-            </OverlayTrigger>
           </div>
 
           <div style={{ flex: 1 }} className="d-flex justify-content-end">
