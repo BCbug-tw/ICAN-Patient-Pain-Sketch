@@ -94,12 +94,19 @@ export default function Summary({ sessionData, setSessionData }) {
     const pidPrefix = sessionData.patientId ? `${sessionData.patientId}_` : '';
     const filename = `${pidPrefix}Patient_Pain_Sketch.pdf`;
 
-    // Support for iOS: use Blob instead of pdf.save()
-    const blob = pdf.output('blob');
+    // Support for iOS: use Blob with application/octet-stream to force download
+    const pdfBlob = pdf.output('blob');
+    const blob = new Blob([pdfBlob], { type: 'application/octet-stream' });
     const url = URL.createObjectURL(blob);
+    
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
+    
+    // Extra attributes for better mobile compatibility
+    link.target = '_blank';
+    link.rel = 'noopener';
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
