@@ -11,7 +11,7 @@ export default function Header() {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
+    <Navbar bg="dark" variant="dark" expand="lg" fixed="top" className="shadow-sm">
       <Container>
         <Navbar.Brand href="/" className="fw-bold">
           {t('app_title')}

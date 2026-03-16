@@ -6,8 +6,9 @@ const resources = {
   en: {
     translation: {
       "app_title": "Patient Pain Sketch System",
+      "home_title": "Patient Basic Information",
       "home_subtitle": "Please enter Patient ID and select charts.",
-      "patient_id": "Patient ID (MRN)",
+      "patient_id": "Patient ID",
       "patient_id_placeholder": "Please enter Patient ID",
       "full_name": "Full Name",
       "dob": "Date of Birth",
@@ -21,8 +22,12 @@ const resources = {
       "download_pdf": "Download PDF Report",
 
       "back": "Back",
+      "back_to_selection": "Back to Selection",
+      "prev_chart": "Previous",
+      "next_chart_simple": "Next",
       "next": "Next",
       "finish": "Finish Marking",
+      "save": "Save",
       "edit": "Edit",
       "continue_editing": "Continue Editing",
       "start_over": "Start Over",
@@ -36,8 +41,12 @@ const resources = {
       "stage2_marker_arrow": "Arrow Marker",
       "stage2_marker_eraser": "Eraser",
 
-      "summary_title": "Review Marked Charts",
-      "summary_stage2": "Patient Chart",
+      "summary_title": "Pain Chart Marking Results",
+      "summary_stage2": "Pain Chart",
+      "summary_instr": "Instructions: Review your marking results below. Click the 'Edit' button on any chart to modify its marks. Once complete, click 'Download PDF' to save the report.",
+      "progress_label": "Marking Progress",
+
+      "detail_instr": "Instructions: Select a tool from the toolbar below: Click to mark a point (X), or drag to draw an arrow. Use the eraser to click or drag over marks to remove them. Click 'Save' or 'Next' when finished.",
 
       "restart_warning_title": "Warning: Data not saved",
       "restart_warning_msg": "You haven't downloaded the PDF report yet. Starting over will clear all current drawings. Are you sure?",
@@ -56,6 +65,7 @@ const resources = {
   'zh-TW': {
     translation: {
       "app_title": "病患疼痛部位標記系統",
+      "home_title": "病患基本資料",
       "home_subtitle": "請輸入病歷號並選擇需要填答的圖表。",
       "patient_id": "病歷",
       "patient_id_placeholder": "請輸入病歷號",
@@ -66,28 +76,36 @@ const resources = {
       "lower_limb": "下肢",
       "select": "選擇圖表",
       "select_charts_title": "選擇需要標記的圖表",
-      "select_charts_subtitle": "可多選。您選擇的圖表將會依序出現供您標記。",
+      "select_charts_subtitle": "您選擇的圖表將會依序出現供您標記(可多選)。",
       "start_sketch": "開始標記",
       "download_pdf": "下載 PDF 報告",
 
       "back": "返回",
+      "back_to_selection": "返回選擇",
+      "prev_chart": "上一張",
+      "next_chart_simple": "下一張",
       "next": "下一步",
       "finish": "完成標記",
+      "save": "儲存",
       "edit": "編輯",
       "continue_editing": "返回編輯",
       "start_over": "重新開始",
-      "next_chart": "儲存並標記下一張",
+      "next_chart": "下一張",
       "cancel": "取消",
       "clear_all": "清除全部",
 
-      "stage2_title": "步驟 2: 詳細疼痛部位標記",
+      "stage2_title": "詳細疼痛部位標記",
       "stage2_tool": "標記工具:",
       "stage2_marker_x": "單點標記 (X)",
       "stage2_marker_arrow": "箭頭標記",
       "stage2_marker_eraser": "橡皮擦",
 
-      "summary_title": "檢視已標記的圖表",
-      "summary_stage2": "病患圖表",
+      "summary_title": "疼痛圖表標記結果",
+      "summary_stage2": "疼痛圖表",
+      "summary_instr": "使用說明：您可以在此檢視各圖表標記結果。若需修改，點擊圖表右下的「編輯」即可重回標記頁面。確認無誤後點擊「下載 PDF 報告」儲存檔案。",
+      "progress_label": "填答進度",
+
+      "detail_instr": "使用說明：您可以從下方工具列選擇工具。單點(X)：點擊圖表可標記。箭頭：按住拖曳可繪製。橡皮擦：點擊或拖曳標記即可清除。完成後點擊「儲存」或「下一步」。",
 
       "restart_warning_title": "警告：尚未存檔",
       "restart_warning_msg": "您尚未下載 PDF 報告。按下重新開始將會清除目前的標記並回到首頁。您確定要繼續嗎？",

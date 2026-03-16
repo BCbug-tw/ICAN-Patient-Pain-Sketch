@@ -13,7 +13,8 @@ function App() {
     dob: '',
     date: new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Taipei' }), // YYYY-MM-DD for date input
     selectedCharts: [], // Array of selected chart IDs
-    chartImages: {} // Map of chartId -> Data URL
+    chartImages: {}, // Map of chartId -> Data URL
+    marksData: {} // Map of chartId -> Raw Marks Array for editing
   });
   const [debugLog, setDebugLog] = useState([]);
 
@@ -30,7 +31,7 @@ function App() {
   return (
     <Router>
       <Header />
-      <div className="bg-light min-vh-100 py-4">
+      <div className="bg-light min-vh-100 py-4 pt-5 mt-3">
         {debugLog.length > 0 && (
           <div className="container mb-3 p-3 bg-danger text-white rounded">
             <strong>Debug Log:</strong>

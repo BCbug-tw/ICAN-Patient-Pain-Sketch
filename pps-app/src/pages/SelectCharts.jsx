@@ -52,15 +52,8 @@ export default function SelectCharts({ sessionData, setSessionData }) {
   return (
     <Container className="py-4">
       <div className="text-center mb-4">
-        <h2 className="mb-2 fw-bold text-primary">{t('select_charts_title')}</h2>
+        <h2 className="text-center mb-4 fw-bold text-primary">{t('select_charts_title')}</h2>
         <p className="text-muted mb-4">{t('select_charts_subtitle')}</p>
-        
-        <div className="d-flex justify-content-center gap-3">
-          <Button variant="outline-secondary" size="lg" className="px-5" onClick={() => navigate(-1)}>{t('back')}</Button>
-          <Button variant="primary" size="lg" className="px-5" onClick={handleStart} disabled={selected.length === 0}>
-            {t('start_sketch')} ({selected.length})
-          </Button>
-        </div>
       </div>
 
       <div className="mb-5">
@@ -71,7 +64,7 @@ export default function SelectCharts({ sessionData, setSessionData }) {
             const themeClass = 'primary';
             
             return (
-              <Col key={chart.id} xs={6} md={4} lg={3}>
+              <Col key={chart.id} xs={6} md={6} lg={3}>
                 <Card 
                   className={`h-100 transition-all ${isSelected ? `border-${themeClass} shadow-sm` : `border-light shadow-sm hover-shadow`}`}
                   onClick={() => handleToggle(chart.id)}
@@ -118,7 +111,7 @@ export default function SelectCharts({ sessionData, setSessionData }) {
         </Row>
       </div>
 
-      <div>
+      <div className="mb-5 pb-5">
         <h4 className="text-success mb-3 pb-2 border-bottom border-success border-2">{t('lower_limb')}</h4>
         <Row className="g-4">
           {charts.filter(c => c.type === 'lower').map(chart => {
@@ -126,7 +119,7 @@ export default function SelectCharts({ sessionData, setSessionData }) {
             const themeClass = 'success';
             
             return (
-              <Col key={chart.id} xs={6} md={4} lg={3}>
+              <Col key={chart.id} xs={6} md={6} lg={3}>
                 <Card 
                   className={`h-100 transition-all ${isSelected ? `border-${themeClass} shadow-sm` : `border-light shadow-sm hover-shadow`}`}
                   onClick={() => handleToggle(chart.id)}
@@ -171,6 +164,16 @@ export default function SelectCharts({ sessionData, setSessionData }) {
             );
           })}
         </Row>
+      </div>
+
+      {/* Fixed bottom action bar */}
+      <div className="fixed-bottom bg-white border-top py-3 shadow-lg" style={{ zIndex: 1030 }}>
+        <Container className="d-flex justify-content-center gap-3">
+          <Button variant="outline-secondary" size="lg" className="px-4 px-md-5" onClick={() => navigate(-1)}>{t('back')}</Button>
+          <Button variant="primary" size="lg" className="px-4 px-md-5" onClick={handleStart} disabled={selected.length === 0}>
+            {t('start_sketch')} ({selected.length})
+          </Button>
+        </Container>
       </div>
     </Container>
   );

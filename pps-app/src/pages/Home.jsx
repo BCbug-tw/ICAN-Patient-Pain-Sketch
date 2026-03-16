@@ -32,7 +32,7 @@ export default function Home({ sessionData, setSessionData }) {
 
   return (
     <Container className="py-5">
-      <h1 className="text-center mb-4">{t('app_title')}</h1>
+      <h2 className="text-center mb-4 fw-bold text-primary">{t('home_title')}</h2>
       <p className="text-center text-muted mb-5">
         {t('home_subtitle')}
       </p>

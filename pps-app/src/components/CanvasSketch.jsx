@@ -7,15 +7,24 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMarksChange }, ref) => {
+const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', initialMarks, maxMarks = null, onMarksChange }, ref) => {
   const pdfCanvasRef = useRef(null);
   const marksCanvasRef = useRef(null);
   const containerRef = useRef(null);
   
   const [pdfDoc, setPdfDoc] = useState(null);
-  const [marks, setMarks] = useState([]);
+  const [marks, setMarks] = useState(initialMarks || []);
   const [currentStartPoint, setCurrentStartPoint] = useState(null);
   const [currentMousePos, setCurrentMousePos] = useState(null);
+
+  // Re-sync marks ONLY when the chart (pdfUrl) changes, not on every re-render
+  const prevPdfUrlRef = useRef(pdfUrl);
+  useEffect(() => {
+    if (prevPdfUrlRef.current !== pdfUrl) {
+      setMarks(initialMarks || []);
+      prevPdfUrlRef.current = pdfUrl;
+    }
+  }, [pdfUrl]);
 
   // Expose a method to get the merged data URL
   useImperativeHandle(ref, () => ({
@@ -79,7 +88,14 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMa
         
         // Prevent concurrent renders
         renderTask = page.render(renderContext);
-        renderTask.promise.catch(err => {
+        renderTask.promise.then(() => {
+          // Force redraw marks after PDF is rendered and coordinate system is strictly ready
+          if (marksCanvasRef.current) {
+            const ctx = marksCanvasRef.current.getContext('2d');
+            ctx.clearRect(0, 0, marksCanvasRef.current.width, marksCanvasRef.current.height);
+            drawAllMarks(ctx, marks, mode, currentMousePos, currentStartPoint);
+          }
+        }).catch(err => {
           if (err.name !== 'RenderingCancelledException') {
             console.error(err);
           }
@@ -108,15 +124,16 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMa
 
   const getMarkerSize = () => {
     if (marksCanvasRef.current) {
-      return Math.max(12, marksCanvasRef.current.width * 0.015);
+      // Slightly smaller than before
+      return Math.max(8, marksCanvasRef.current.width * 0.012); 
     }
-    return 12;
+    return 8;
   };
 
   const drawX = (ctx, x, y, color = 'red') => {
     ctx.strokeStyle = color;
     const size = getMarkerSize();
-    ctx.lineWidth = Math.max(2, size * 0.25);
+    ctx.lineWidth = 2; // Fixed smaller width
     ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(x - size, y - size);
@@ -128,11 +145,11 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMa
 
   const drawArrow = (ctx, fromX, fromY, toX, toY, color = 'blue') => {
     const size = getMarkerSize();
-    const headLength = size * 1.5;
+    const headLength = size * 1.2; // Slightly smaller head
     const angle = Math.atan2(toY - fromY, toX - fromX);
 
     ctx.strokeStyle = color;
-    ctx.lineWidth = Math.max(2, size * 0.25);
+    ctx.lineWidth = 2; // Fixed smaller width
     ctx.lineCap = 'round';
     
     // Main line
@@ -194,6 +211,17 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMa
     if (actMode === 'arrow' && startPt && actMouse) {
       // Draw live arrow while dragging
       drawArrow(ctx, startPt.x, startPt.y, actMouse.x, actMouse.y, 'blue');
+    }
+
+    // Draw Eraser Circle Cursor
+    if (actMode === 'eraser' && actMouse) {
+      ctx.beginPath();
+      ctx.arc(actMouse.x, actMouse.y, 20, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5, 5]); // Dashed circle for eraser
+      ctx.stroke();
+      ctx.setLineDash([]); // Reset
     }
   };
 
@@ -258,8 +286,6 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMa
   const handlePointerMove = (e) => {
     e.preventDefault();
 
-    if (!currentStartPoint) return;
-
     const canvas = marksCanvasRef.current;
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -267,11 +293,12 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMa
     const x = (e.clientX - rect.left) * scaleX;
     const y = (e.clientY - rect.top) * scaleY;
 
-    if (mode === 'eraser' && currentStartPoint.erasing) {
+    // Always update mouse pos for cursor rendering
+    setCurrentMousePos({ x, y });
+
+    if (currentStartPoint && mode === 'eraser' && currentStartPoint.erasing) {
       // Continuous erase while dragging
       performHitTestAndErase(x, y);
-    } else if (mode === 'arrow') {
-      setCurrentMousePos({ x, y });
     }
   };
 
@@ -310,19 +337,24 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', maxMarks = null, onMa
     finalizeArrow(e);
   };
 
+  const handlePointerLeave = () => {
+    setCurrentMousePos(null);
+  };
+
   return (
-    <div ref={containerRef} className="canvas-wrapper mx-auto" style={{ position: 'relative', width: '100%', maxWidth: 'max-content' }}>
+    <div ref={containerRef} className="canvas-wrapper mx-auto shadow-sm border" style={{ position: 'relative', width: '100%', maxWidth: 'max-content' }}>
       <canvas 
         ref={pdfCanvasRef} 
         style={{ display: 'block', width: '100%', height: 'auto' }} 
       />
       <canvas 
         ref={marksCanvasRef} 
-        style={{ display: 'block', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2, cursor: mode === 'eraser' ? 'cell' : 'crosshair' }} 
+        style={{ display: 'block', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2, cursor: mode === 'eraser' ? 'none' : 'crosshair' }} 
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
+        onPointerLeave={handlePointerLeave}
       />
     </div>
   );
