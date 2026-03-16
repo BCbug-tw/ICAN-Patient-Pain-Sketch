@@ -16,6 +16,11 @@ export default function Detail({ sessionData, setSessionData }) {
   const [currentIndex, setCurrentIndex] = useState(location.state?.editChartIndex ?? 0);
   const isDirectEdit = location.state?.directEdit ?? false;
 
+  // Reset tool mode to 'point' whenever chart changes
+  useEffect(() => {
+    setMode('point');
+  }, [currentIndex]);
+
   // Protect route if no session target is set
   useEffect(() => {
     if (!sessionData?.selectedCharts || sessionData.selectedCharts.length === 0) {
