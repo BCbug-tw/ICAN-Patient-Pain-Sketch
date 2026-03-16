@@ -1,6 +1,10 @@
 # Patient Pain Sketch (PPS) Web System
 
-A professional medical pain marking system designed to help clinicians and patients precisely record pain areas and generate standardized PDF reports.
+This is a professional medical pain marking system designed to provide a convenient **digital completion method** for clinical pain assessments. The anatomical charts and marking protocols used in this system are based on the research and methodology published in:
+
+> **Reference:** *"Creation of the Patient Pain Sketch (PPS): A patient-reported outcome measure to describe phantom limb pain and residual limb pain"* (PMC11178259). [View Article](https://pmc.ncbi.nlm.nih.gov/articles/PMC11178259/)
+
+The PPS system aims to streamline the clinical workflow by transitioning from paper-based sketches to a standardized digital format, enabling faster data collection and precise reporting.
 
 ## Key Features
 
