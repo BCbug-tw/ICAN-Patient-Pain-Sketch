@@ -34,7 +34,7 @@ export default function Detail({ sessionData, setSessionData }) {
     { id: 'PPS_BKA', type: 'lower' }
   ];
   const chartDef = chartsDef.find(c => c.id === currentChartId);
-  const prefix = chartDef?.type === 'upper' ? '/PPS/Upper' : '/PPS/Lower';
+  const prefix = chartDef?.type === 'upper' ? 'PPS/Upper' : 'PPS/Lower';
   const pdfUrl = `${prefix}/${currentChartId}.pdf`;
 
   const isLastChart = currentIndex === sessionData.selectedCharts.length - 1;

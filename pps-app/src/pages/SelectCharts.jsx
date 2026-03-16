@@ -89,7 +89,7 @@ export default function SelectCharts({ sessionData, setSessionData }) {
                       style={{ height: '140px', width: '100%', overflow: 'hidden' }}
                     >
                       <img 
-                        src={`/illustration/${chart.id}.png`} 
+                        src={`illustration/${chart.id}.png`} 
                         alt={chart.id}
                         className="img-fluid"
                         style={{ maxHeight: '100%', objectFit: 'contain' }}
@@ -144,7 +144,7 @@ export default function SelectCharts({ sessionData, setSessionData }) {
                       style={{ height: '140px', width: '100%', overflow: 'hidden' }}
                     >
                       <img 
-                        src={`/illustration/${chart.id}.png`} 
+                        src={`illustration/${chart.id}.png`} 
                         alt={chart.id}
                         className="img-fluid"
                         style={{ maxHeight: '100%', objectFit: 'contain' }}
