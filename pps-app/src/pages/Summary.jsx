@@ -91,8 +91,10 @@ export default function Summary({ sessionData, setSessionData }) {
       pdf.addImage(overlayImg, 'PNG', 0, 0, 595, 842);
     });
 
-    const pidPrefix = sessionData.patientId ? `${sessionData.patientId}_` : '';
-    const filename = `${pidPrefix}Patient_Pain_Sketch.pdf`;
+    const namePart = sessionData.fullName ? `${sessionData.fullName}_` : '';
+    const datePart = (sessionData.date || '').replace(/-/g, '');
+    const pid = sessionData.patientId || 'EmptyPID';
+    const filename = `PPS_${pid}_${namePart}${datePart}.pdf`;
 
     // Support for iOS: use Blob with application/octet-stream to force download
     const pdfBlob = pdf.output('blob');
