@@ -42,24 +42,6 @@ The PPS system aims to streamline the clinical workflow by transitioning from pa
   - `pdf.js`: Renders high-precision medical PDF templates onto the HTML5 canvas.
   - `jspdf`: Captures canvas data and generates professional multi-page reports.
 
-## Development & Setup
-
-### Install Dependencies
-```bash
-npm install
-```
-
-### Run in Development
-```bash
-npm run dev
-```
-
-### Build for Production
-```bash
-npm run build
-```
-
-
 ## Important Notes
 
 - **Data Persistence**: This system uses temporary state management. Refreshing the browser or clicking "Start Over" will clear all unsaved markings.
