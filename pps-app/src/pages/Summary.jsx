@@ -28,9 +28,46 @@ export default function Summary({ sessionData, setSessionData }) {
       format: [595, 842]
     });
 
+    // Proportional coordinates for 595x842 scale
+    const coords = {
+      firstName: [122, 100],
+      lastName: [295, 100],
+      mrn: [122, 118],
+      dob: [295, 118],
+      date: [122, 136], // Estimated below MRN line if needed, or stick to lines
+      checkboxes: {
+        'PPS_BKA': [378, 37],
+        'PPS_AKA': [378, 51],
+        'PPS_Transradial': [378, 81],
+        'PPS_Transhumeral': [378, 96],
+        'PPS_Forequarter': [378, 111],
+      }
+    };
+
     chartEntries.forEach(([chartId, dataUrl], index) => {
       if (index > 0) pdf.addPage();
+      
+      // 1. Draw the merged image (Background + Marks)
       pdf.addImage(dataUrl, 'JPEG', 0, 0, 595, 842);
+
+      // 2. Overlay Patient Info
+      pdf.setFontSize(10);
+      pdf.setTextColor(0, 0, 0);
+      
+      if (sessionData.firstName) pdf.text(sessionData.firstName, coords.firstName[0], coords.firstName[1]);
+      if (sessionData.lastName) pdf.text(sessionData.lastName, coords.lastName[0], coords.lastName[1]);
+      if (sessionData.patientId) pdf.text(sessionData.patientId, coords.mrn[0], coords.mrn[1]);
+      if (sessionData.dob) pdf.text(sessionData.dob, coords.dob[0], coords.dob[1]);
+      
+      // Optional: Draw filling date if it's on a known line. For now, let's put it at a safe spot or skip if not in template.
+      // pdf.text(sessionData.date, 122, 136);
+
+      // 3. Auto-calculate and check boxes
+      const checkCoords = coords.checkboxes[chartId];
+      if (checkCoords) {
+        pdf.setFontSize(14);
+        pdf.text('V', checkCoords[0], checkCoords[1]);
+      }
     });
     
     const pidPrefix = sessionData.patientId ? `${sessionData.patientId}_` : '';
@@ -49,6 +86,10 @@ export default function Summary({ sessionData, setSessionData }) {
   const performRestart = () => {
     setSessionData({
       patientId: '',
+      firstName: '',
+      lastName: '',
+      dob: '',
+      date: new Date().toLocaleDateString('zh-TW', { timeZone: 'Asia/Taipei' }),
       selectedCharts: [],
       chartImages: {}
     });
@@ -81,6 +122,9 @@ export default function Summary({ sessionData, setSessionData }) {
       </div>
 
       <div className="d-flex justify-content-center gap-4">
+        <Button variant="outline-secondary" size="lg" onClick={() => navigate('/detail')}>
+          {t('continue_editing')}
+        </Button>
         <Button variant="outline-primary" size="lg" onClick={handleRestart}>{t('start_over')}</Button>
         <Button variant="primary" size="lg" onClick={handleDownload}>
           {t('download_pdf')}
