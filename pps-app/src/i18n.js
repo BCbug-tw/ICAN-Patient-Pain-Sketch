@@ -8,7 +8,7 @@ const resources = {
       "app_title": "Patient Pain Sketch System",
       "home_subtitle": "Please enter Patient ID and select charts.",
       "patient_id": "Patient ID",
-      "patient_id_placeholder": "Please enter Patient ID...",
+      "patient_id_placeholder": "Please enter Patient ID",
       "upper_limb": "Upper Limb",
       "lower_limb": "Lower Limb",
       "select": "Select Chart",
@@ -16,7 +16,7 @@ const resources = {
       "select_charts_subtitle": "Multi-selection allowed. Charts will appear in sequence.",
       "start_sketch": "Start Marking",
       "download_pdf": "Download PDF Report",
-      
+
       "back": "Back",
       "next": "Next",
       "finish": "Finish Marking",
@@ -30,7 +30,7 @@ const resources = {
       "stage2_marker_x": "Point Marker (X)",
       "stage2_marker_arrow": "Arrow Marker",
       "stage2_marker_eraser": "Eraser",
-      
+
       "summary_title": "Review Marked Charts",
       "summary_stage2": "Patient Chart",
 
@@ -53,7 +53,7 @@ const resources = {
       "app_title": "病患疼痛部位標記系統",
       "home_subtitle": "請輸入病歷號並選擇需要填答的圖表。",
       "patient_id": "病歷號",
-      "patient_id_placeholder": "請輸入病歷號...",
+      "patient_id_placeholder": "請輸入病歷號",
       "upper_limb": "上肢",
       "lower_limb": "下肢",
       "select": "選擇圖表",
