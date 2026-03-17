@@ -66,7 +66,7 @@ const resources = {
     translation: {
       "app_title": "病患疼痛部位標記系統",
       "home_title": "病患基本資料",
-      "home_subtitle": "請輸入病歷號並選擇需要填答的圖表。",
+      "home_subtitle": "請輸入病歷號並填寫圖表。",
       "patient_id": "病歷",
       "patient_id_placeholder": "請輸入病歷號",
       "full_name": "姓名",
@@ -102,7 +102,7 @@ const resources = {
 
       "summary_title": "疼痛圖表標記結果",
       "summary_stage2": "疼痛圖表",
-      "summary_instr": "使用說明：您可以在此檢視各圖表標記結果。若需修改，點擊圖表右下的「編輯」即可重回標記頁面。確認無誤後點擊「下載 PDF 報告」儲存檔案。",
+      "summary_instr": "使用說明：您可以在此檢視各圖表標記結果。若需修改，點擊圖表右下的「編輯」即可重回標記頁面。確認無誤後點擊「下載 PDF」儲存檔案。",
       "progress_label": "填答進度",
 
       "detail_instr": "使用說明：您可以從下方工具列選擇工具。單點(X)：點擊圖表可標記。箭頭：按住拖曳可繪製。橡皮擦：點擊或拖曳標記即可清除。",
