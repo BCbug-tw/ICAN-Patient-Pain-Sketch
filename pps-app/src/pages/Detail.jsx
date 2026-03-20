@@ -44,7 +44,7 @@ export default function Detail({ sessionData, setSessionData }) {
   ];
   const chartDef = chartsDef.find(c => c.id === currentChartId);
   const prefix = chartDef?.type === 'upper' ? 'PPS/Upper' : 'PPS/Lower';
-  const pdfUrl = `${prefix}/${currentChartId}.pdf`;
+  const imageUrl = `${prefix}/${currentChartId}.png`;
 
   const isLastChart = currentIndex === sessionData.selectedCharts.length - 1;
 
@@ -133,7 +133,7 @@ export default function Detail({ sessionData, setSessionData }) {
         <div className="d-flex justify-content-center">
           <CanvasSketch 
             ref={canvasRef}
-            pdfUrl={pdfUrl}
+            imageUrl={imageUrl}
             mode={mode}
             initialMarks={sessionData.marksData?.[currentChartId]}
           />

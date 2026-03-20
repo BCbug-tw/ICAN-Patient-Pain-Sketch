@@ -28,67 +28,107 @@ export default function Summary({ sessionData, setSessionData }) {
       format: [595, 842]
     });
 
-    // Proportional coordinates for 595x842 scale
-    const coords = {
-      firstName: [122, 100],
-      lastName: [295, 100],
-      mrn: [122, 118],
-      dob: [295, 118],
-      date: [122, 136],
-    };
-
-    // Smart Name Parsing
-    let firstName = '';
-    let lastName = '';
-    const name = sessionData.fullName || '';
-    const hasChinese = /[\u4e00-\u9fa5]/.test(name);
-
-    if (hasChinese) {
-      firstName = name;
-    } else if (name.includes(' ')) {
-      const parts = name.trim().split(/\s+/);
-      firstName = parts[0];
-      lastName = parts.slice(1).join(' ');
-    } else {
-      firstName = name;
-    }
-
     const formatDate = (dateStr) => {
       if (!dateStr) return '';
       return dateStr.replace(/-/g, '/');
     };
 
-    // Draw CJK text to a canvas first, then overlay image on PDF
-    const drawOverlayImage = () => {
+    // Draw Patient Information on the first blank page
+    const drawInfoPageImage = () => {
       const canvas = document.createElement('canvas');
       canvas.width = 595 * 2;
       canvas.height = 842 * 2;
       const ctx = canvas.getContext('2d');
       ctx.scale(2, 2);
 
+      // White background
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, 595, 842);
+
+      ctx.fillStyle = 'black';
+      ctx.font = 'bold 24px "Microsoft JhengHei", "PingFang TC", sans-serif';
+      ctx.fillText(t('home_title'), 50, 80);
+
+      ctx.beginPath();
+      ctx.moveTo(50, 100);
+      ctx.lineTo(545, 100);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.font = '16px "Microsoft JhengHei", "PingFang TC", sans-serif';
+      let y = 140;
+      const lineSpacing = 35;
+
+      ctx.fillText(`${t('full_name')}: ${sessionData.fullName || ''}`, 50, y);
+      y += lineSpacing;
+      ctx.fillText(`${t('patient_id')}: ${sessionData.patientId || ''}`, 50, y);
+      y += lineSpacing;
+      ctx.fillText(`${t('dob')}: ${formatDate(sessionData.dob)}`, 50, y);
+      y += lineSpacing;
+      ctx.fillText(`${t('date')}: ${formatDate(sessionData.date)}`, 50, y);
+
+      y += lineSpacing;
+      ctx.fillText(`${t('marked_charts')}:`, 50, y);
+      chartEntries.forEach(([chartId]) => {
+        y += 28;
+        ctx.fillText(`- ${t(`term_${chartId.replace(' ', '_')}`)}`, 70, y);
+      });
+
+      return canvas.toDataURL('image/jpeg', 0.9);
+    };
+
+    // Draw Chart Title on the chart pages
+    const drawChartTitleImage = (titleText) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 595 * 2;
+      canvas.height = 842 * 2;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(2, 2);
       ctx.clearRect(0, 0, 595, 842);
 
       ctx.fillStyle = 'black';
-      ctx.font = '10px "Microsoft JhengHei", "PingFang TC", sans-serif';
+      ctx.font = 'bold 24px "Microsoft JhengHei", "PingFang TC", sans-serif';
 
-      if (firstName) ctx.fillText(firstName, coords.firstName[0], coords.firstName[1] - 2);
-      if (lastName) ctx.fillText(lastName, coords.lastName[0], coords.lastName[1] - 2);
-      if (sessionData.patientId) ctx.fillText(sessionData.patientId, coords.mrn[0], coords.mrn[1] - 2);
-      if (sessionData.dob) ctx.fillText(formatDate(sessionData.dob), coords.dob[0], coords.dob[1] - 2);
+      const textWidth = ctx.measureText(titleText).width;
+      // Center the title horizontally, near the top
+      ctx.fillText(titleText, (595 - textWidth) / 2, 40);
 
       return canvas.toDataURL('image/png');
     };
 
-    const overlayImg = drawOverlayImage();
+    // 1. Add Info Page
+    const infoImg = drawInfoPageImage();
+    pdf.addImage(infoImg, 'JPEG', 0, 0, 595, 842);
 
-    chartEntries.forEach(([chartId, dataUrl], index) => {
-      if (index > 0) pdf.addPage();
+    // 2. Add Chart Pages
+    chartEntries.forEach(([chartId, dataUrl]) => {
+      pdf.addPage();
 
-      // 1. Draw the merged image (Background + Marks)
-      pdf.addImage(dataUrl, 'JPEG', 0, 0, 595, 842);
+      const titleText = t(`term_${chartId.replace(' ', '_')}`);
+      const titleImg = drawChartTitleImage(titleText);
 
-      // 2. Overlay Metadata Image (to support CJK fonts)
-      pdf.addImage(overlayImg, 'PNG', 0, 0, 595, 842);
+      // Get image properties to maintain aspect ratio
+      const props = pdf.getImageProperties(dataUrl);
+      const imgWidth = props.width;
+      const imgHeight = props.height;
+
+      // Calculate scaled dimensions (PDF is 595x842)
+      const maxWidth = 595 - 40; // 20px padding left/right
+      const maxHeight = 842 - 100; // Leave room for title at top (y=60) and some margin
+
+      const ratio = Math.min(maxWidth / imgWidth, maxHeight / imgHeight);
+      const printWidth = imgWidth * ratio;
+      const printHeight = imgHeight * ratio;
+
+      // Center horizontally
+      const startX = (595 - printWidth) / 2;
+      // Start vertically below the title
+      const startY = 80;
+
+      pdf.addImage(dataUrl, 'JPEG', startX, startY, printWidth, printHeight);
+
+      // Draw Title Overlay (transparent background)
+      pdf.addImage(titleImg, 'PNG', 0, 0, 595, 842);
     });
 
     const namePart = sessionData.fullName ? `${sessionData.fullName}_` : '';
@@ -100,15 +140,15 @@ export default function Summary({ sessionData, setSessionData }) {
     const pdfBlob = pdf.output('blob');
     const blob = new Blob([pdfBlob], { type: 'application/octet-stream' });
     const url = URL.createObjectURL(blob);
-    
+
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
-    
+
     // Extra attributes for better mobile compatibility
     link.target = '_blank';
     link.rel = 'noopener';
-    
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -146,7 +186,7 @@ export default function Summary({ sessionData, setSessionData }) {
     <Container className="py-4">
       <div className="text-center mb-4">
         <h2 className="fw-bold text-primary mb-2">{t('summary_title')}</h2>
-        
+
         <div className="mx-auto mb-4 p-2 text-center text-secondary" style={{ maxWidth: '700px', fontSize: '14px' }}>
           <i className="bi bi-info-circle me-2"></i>
           {t('summary_instr')}

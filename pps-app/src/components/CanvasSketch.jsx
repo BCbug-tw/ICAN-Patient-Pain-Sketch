@@ -1,30 +1,22 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
 
-// For Vite, we can directly point the workerSrc to the locally installed pdf.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.mjs',
-  import.meta.url
-).toString();
-
-const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', initialMarks, maxMarks = null, onMarksChange }, ref) => {
+const CanvasSketch = forwardRef(({ imageUrl, mode = 'point', initialMarks, maxMarks = null, onMarksChange }, ref) => {
   const pdfCanvasRef = useRef(null);
   const marksCanvasRef = useRef(null);
   const containerRef = useRef(null);
   
-  const [pdfDoc, setPdfDoc] = useState(null);
   const [marks, setMarks] = useState(initialMarks || []);
   const [currentStartPoint, setCurrentStartPoint] = useState(null);
   const [currentMousePos, setCurrentMousePos] = useState(null);
 
-  // Re-sync marks ONLY when the chart (pdfUrl) changes, not on every re-render
-  const prevPdfUrlRef = useRef(pdfUrl);
+  // Re-sync marks ONLY when the chart (imageUrl) changes, not on every re-render
+  const prevImageUrlRef = useRef(imageUrl);
   useEffect(() => {
-    if (prevPdfUrlRef.current !== pdfUrl) {
+    if (prevImageUrlRef.current !== imageUrl) {
       setMarks(initialMarks || []);
-      prevPdfUrlRef.current = pdfUrl;
+      prevImageUrlRef.current = imageUrl;
     }
-  }, [pdfUrl]);
+  }, [imageUrl]);
 
   // Expose a method to get the merged data URL
   useImperativeHandle(ref, () => ({
@@ -48,68 +40,41 @@ const CanvasSketch = forwardRef(({ pdfUrl, mode = 'point', initialMarks, maxMark
   }));
 
   useEffect(() => {
-    if (!pdfUrl) return;
-    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-    loadingTask.promise.then(doc => {
-      setPdfDoc(doc);
-    }).catch(err => {
-      console.error('Error loading PDF:', err);
-    });
-  }, [pdfUrl]);
+    if (!imageUrl) return;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = imageUrl;
+    
+    img.onload = () => {
+      const pdfCanvas = pdfCanvasRef.current;
+      const marksCanvas = marksCanvasRef.current;
+      if (!pdfCanvas || !marksCanvas) return;
 
-  useEffect(() => {
-    let renderTask = null;
-    let isCancelled = false;
+      const width = img.naturalWidth;
+      const height = img.naturalHeight;
+      
+      pdfCanvas.width = width;
+      pdfCanvas.height = height;
+      marksCanvas.width = width;
+      marksCanvas.height = height;
 
-    if (pdfDoc) {
-      pdfDoc.getPage(1).then(page => {
-        if (isCancelled) return;
-
-        const viewport = page.getViewport({ scale: 1.5 });
-        const pdfCanvas = pdfCanvasRef.current;
-        const marksCanvas = marksCanvasRef.current;
-        
-        pdfCanvas.width = viewport.width;
-        pdfCanvas.height = viewport.height;
-        marksCanvas.width = viewport.width;
-        marksCanvas.height = viewport.height;
-
-        if (containerRef.current) {
-          // Remove max-width and let the parent determine bounds if needed. Width 100% fits container.
-          containerRef.current.style.width = '100%';
-          containerRef.current.style.maxWidth = `${viewport.width}px`; 
-          // Do NOT rigidly set aspect-ratio here via px formulas which mismatch CSS width sizing
-        }
-
-        const renderContext = {
-          canvasContext: pdfCanvas.getContext('2d'),
-          viewport: viewport
-        };
-        
-        // Prevent concurrent renders
-        renderTask = page.render(renderContext);
-        renderTask.promise.then(() => {
-          // Force redraw marks after PDF is rendered and coordinate system is strictly ready
-          if (marksCanvasRef.current) {
-            const ctx = marksCanvasRef.current.getContext('2d');
-            ctx.clearRect(0, 0, marksCanvasRef.current.width, marksCanvasRef.current.height);
-            drawAllMarks(ctx, marks, mode, currentMousePos, currentStartPoint);
-          }
-        }).catch(err => {
-          if (err.name !== 'RenderingCancelledException') {
-            console.error(err);
-          }
-        });
-      });
-    }
-
-    return () => {
-      isCancelled = true;
-      if (renderTask) {
-        renderTask.cancel();
+      if (containerRef.current) {
+        containerRef.current.style.width = '100%';
+        containerRef.current.style.maxWidth = `${width}px`; 
       }
+
+      const ctx = pdfCanvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Force redraw marks after image is rendered and coordinate system is strictly ready
+      const marksCtx = marksCanvas.getContext('2d');
+      marksCtx.clearRect(0, 0, width, height);
+      drawAllMarks(marksCtx, marks, mode, currentMousePos, currentStartPoint);
     };
-  }, [pdfDoc]);
+    img.onerror = (err) => {
+      console.error('Error loading image:', err);
+    };
+  }, [imageUrl]);
 
   // Redraw when state changes
   useEffect(() => {

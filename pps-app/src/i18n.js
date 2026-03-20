@@ -20,6 +20,7 @@ const resources = {
       "select_charts_subtitle": "Multi-selection allowed. Charts will appear in sequence.",
       "start_sketch": "Start Marking",
       "download_pdf": "Download PDF Report",
+      "marked_charts": "Marked Charts",
 
       "back": "Back",
       "back_to_selection": "Back to Selection",
@@ -67,7 +68,7 @@ const resources = {
       "app_title": "病患疼痛部位標記系統",
       "home_title": "病患基本資料",
       "home_subtitle": "請輸入病歷號並填寫圖表。",
-      "patient_id": "病歷",
+      "patient_id": "病歷號",
       "patient_id_placeholder": "請輸入病歷號",
       "full_name": "姓名",
       "dob": "出生日期",
@@ -79,6 +80,7 @@ const resources = {
       "select_charts_subtitle": "您選擇的圖表將會依序出現供您標記(可多選)。",
       "start_sketch": "開始標記",
       "download_pdf": "下載 PDF",
+      "marked_charts": "標記圖表",
 
       "back": "返回",
       "back_to_selection": "返回選擇",
